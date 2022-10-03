@@ -1,41 +1,26 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
-// import FlightSchema from './model.js'
-const PORT = 4444
-const app = express()
-app.use(cors())
+import FlightModel from './models/Flight.js'
 
-mongoose.connect('mongodb+srv://TrueAlexander:Parol1001@cluster0.dkscvk5.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://TrueAlexander:Parol1001@cluster0.dkscvk5.mongodb.net/widget-flights?retryWrites=true&w=majority')
 .then(() => console.log('DB ok'))
 .catch((err) => console.log('DB error', err))
 
-const flightsSchema = {
-  departing: String,
-  destination: String,
-  flightNumber: String,
-  gate: String,
-  status: String,
-}
+const PORT = 5555
+const app = express()
+app.use(cors())
 
-const Flight = mongoose.model('Flight', flightsSchema)
 
-app.get('/flights', (req, res) => {
+app.get('/flights', async (req, res) => {
+  
   try {
-    
-    const allFlights = Flight.find({}, function(flights) {
-      // res.send(flights.json())
-    })
-    
-
-    
-    
-   
+  const flights = await FlightModel.find()
+   res.json(flights)
 
   } catch (err) {
-    console.log(err)
     res.status(500).json({
-      message: 'not got flights',
+      message: 'Error ' + err, 
     })
   }
 })
@@ -46,30 +31,3 @@ app.listen(PORT, (err) => {
   }
   console.log(`Server OK on port: ` + PORT)
 })
-
-
-// const PORT = 8000
-// const axios = require('axios').default
-// const express = require('express')
-// const cors = require('cors')
-// require('dotenv').config()
-
-// const app = express()
-
-// app.use(cors())
-
-// app.get('/flights', (req, res) => {
-//   const options = {
-//     url: `${process.env.URL}?page-size=6`,
-//     headers: {
-//       accept: `application/json`,
-//       'X-Cassandra-Token': process.env.TOKEN,
-//     }
-//   }
-//   axios.request(options).then(response => {
-//     console.log(response.data)
-//     res.json(response.data)
-//   }).catch(error => console.log(error))
-// })
-
-// app.listen(PORT, () => console.log('running on port ' + PORT))

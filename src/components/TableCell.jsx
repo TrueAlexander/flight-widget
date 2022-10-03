@@ -1,10 +1,12 @@
-import React from 'react'
+import TableLetter from './TableLetter'
 
-const TableCell = () => {
+const TableCell = ({ word }) => {
   return (
-    <div>
-      
-    </div>
+    <td>
+      {Array.from(word).map((letter, index) => (
+        <TableLetter key={index} letter={letter} index={index} />
+      ))}
+    </td>
   )
 }
 
